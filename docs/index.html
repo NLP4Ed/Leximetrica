@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Leximetrica v1.3 - NLP4Ed</title>
+  <link rel="icon" type="image/svg+xml" href="img/favicon.svg">
+  <meta name="description" content="Quantitative linguistics and lexical dispersion analyzer: Zipf's Law, Heaps' Law, Shannon Entropy, Menzerath-Altmann, Gries's DP, Juilland's D, Carroll's D2, Rosengren's S, and Burstiness.">
+  <!-- fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,700&family=Noto+Naskh+Arabic:wght@400&display=swap" rel="stylesheet">
+  <!-- fa spinner -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- header -->
+    <header class="app-header">
+      <div class="header-top-bar">
+        <div class="brand-pair">
+          <a href="https://nlp4ed.com" target="_blank" rel="noopener noreferrer" title="Visit NLP4Ed.com">
+            <img src="img/nlp4ed.svg" alt="NLP4Ed.com" class="header-logo">
+          </a>
+          <span class="brand-divider" aria-hidden="true"></span>
+          <span class="brand-author">Built by <a href="https://www.linkedin.com/in/yassine-lchgary/" target="_blank" rel="noopener noreferrer" class="brand-author-link"><span>Yassine Lchgary</span><img src="img/yassine.jpg" alt="Yassine Lchgary" class="author-avatar" width="28" height="28"></a></span>
+        </div>
+        <a href="https://github.com/NLP4Ed/Leximetrica" target="_blank" rel="noopener noreferrer" class="header-github-link" aria-label="GitHub repository">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"></path></svg>
+        </a>
+      </div>
+
+      <div class="header-main-row">
+        <div class="logo-group">
+          <h1>Leximetrica <span class="badge-beta">v1.3</span></h1>
+          <p>Quantitative linguistics &amp; lexical dispersion analyzer</p>
+        </div>
+      </div>
+    </header>
+
+    <!-- samples -->
+    <div class="sample-bar">
+      <span class="sample-bar-label">Samples:</span>
+      <button type="button" class="sample-chip" data-sample="english">English</button>
+      <button type="button" class="sample-chip" data-sample="arabic">Arabic</button>
+      <button type="button" class="sample-chip" data-sample="darija">Moroccan Arabic</button>
+    </div>
+
+    <!-- input -->
+    <section class="card section-gap" aria-labelledby="inputHeading">
+      <div class="card-header">
+        <div class="card-title" id="inputHeading">
+          <svg class="icon-red" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>Raw Input Text
+        </div>
+        <span class="char-counter" id="inputCounter">0 words &bull; 0 characters</span>
+      </div>
+
+      <div
+        id="inputText"
+        class="text-input"
+        contenteditable="true"
+        role="textbox"
+        aria-multiline="true"
+        aria-labelledby="inputHeading"
+        dir="auto"
+        spellcheck="false"
+        data-placeholder="Type or paste text here, upload a .txt file, or click a sample above to test..."
+      ></div>
+
+      <div class="controls-row">
+        <div class="controls-left">
+          <label class="inline-control" for="numSegments">
+            <span>Segments (<em>n</em>)</span>
+            <input id="numSegments" type="number" min="2" max="50" value="10">
+          </label>
+          <label class="inline-control" for="minFreq">
+            <span>Min. freq</span>
+            <input id="minFreq" type="number" min="1" max="50" value="2">
+          </label>
+          <label class="checkbox-inline">
+            <input id="optLowercase" type="checkbox" checked>
+            <span>Lowercase</span>
+          </label>
+        </div>
+
+        <div class="input-actions">
+          <label class="btn btn-secondary-accent file-upload-label">
+            <svg class="icon-red" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>Upload .txt
+            <input id="fileUpload" type="file" accept=".txt,.md,text/plain" hidden>
+          </label>
+          <button type="button" class="btn btn-primary" id="analyzeBtn" disabled>
+            <i id="analyzeBtnSpinner" class="fa-solid fa-circle-notch fa-spin icon-white" aria-hidden="true"></i>
+            <svg id="analyzeBtnZap" class="icon-white" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" hidden><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+            <span id="analyzeBtnText">Loading…</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- status banners -->
+    <div id="busyBanner" class="busy-banner section-gap" hidden aria-live="polite">
+      <i class="fa-solid fa-circle-notch fa-spin icon-red" aria-hidden="true"></i>
+      <span id="busyText">Preparing text analyzer…</span>
+    </div>
+
+    <div id="errorBanner" class="status-banner status-banner--error section-gap" role="alert" hidden></div>
+    <div id="warningsContainer" class="warnings-stack section-gap" hidden></div>
+
+    <!-- results -->
+    <div id="resultsSection" hidden>
+      <!-- summary + laws -->
+      <section class="card section-gap" aria-labelledby="lawsHeading">
+        <div class="card-header card-header--wrap">
+          <div class="card-title" id="lawsHeading">
+            <svg class="icon-red" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>Quantitative Linguistics Laws &amp; Corpus Signatures
+          </div>
+          <button type="button" class="btn btn-secondary-accent btn-icon" id="exportSummaryCsvBtn" aria-label="Export quantitative summary as CSV">
+            <svg class="icon-red" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+          </button>
+        </div>
+
+        <!-- basic counts -->
+        <div class="stats-grid stats-grid--meta" id="metaGrid"></div>
+
+        <!-- quantitative signatures -->
+        <div class="stats-grid stats-grid--laws" id="lawsGrid"></div>
+      </section>
+
+      <!-- charts -->
+      <div class="charts-grid section-gap">
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <svg class="icon-red" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>Zipf's Law (Log-Log Rank-Frequency)
+            </div>
+            <button type="button" class="btn btn-secondary-accent btn-icon" data-export-chart="zipf" aria-label="Export Zipf's Law figure as PNG">
+              <svg class="icon-red" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+            </button>
+          </div>
+          <p class="chart-subtitle" id="zipfCaption"></p>
+          <div class="chart-canvas-wrap">
+            <canvas id="zipfChart"></canvas>
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <svg class="icon-red" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>Heaps' Law (Vocabulary Growth)
+            </div>
+            <button type="button" class="btn btn-secondary-accent btn-icon" data-export-chart="heaps" aria-label="Export Heaps' Law figure as PNG">
+              <svg class="icon-red" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+            </button>
+          </div>
+          <p class="chart-subtitle" id="heapsCaption"></p>
+          <div class="chart-canvas-wrap">
+            <canvas id="heapsChart"></canvas>
+          </div>
+        </section>
+
+        <section class="card chart-card--wide">
+          <div class="card-header">
+            <div class="card-title">
+              <svg class="icon-red" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>Menzerath-Altmann Law (Sentence Length vs. Mean Word Length)
+            </div>
+            <button type="button" class="btn btn-secondary-accent btn-icon" data-export-chart="menzerath" aria-label="Export Menzerath-Altmann Law figure as PNG">
+              <svg class="icon-red" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+            </button>
+          </div>
+          <p class="chart-subtitle" id="menzerathCaption"></p>
+          <div class="chart-canvas-wrap chart-canvas-wrap--tall">
+            <canvas id="menzerathChart"></canvas>
+          </div>
+        </section>
+      </div>
+
+      <!-- dispersion table -->
+      <section class="card section-gap" aria-labelledby="dispersionTableCaption">
+        <div class="card-header card-header--wrap">
+          <div>
+            <div class="card-title">
+              <svg class="icon-red" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>Lexical Dispersion &amp; Burstiness Explorer
+            </div>
+            <p class="table-subtext" id="dispersionSummaryLine"></p>
+          </div>
+          <div class="table-toolbar-actions">
+            <div class="table-search-box">
+              <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+              <label for="wordFilter" class="visually-hidden">Filter words</label>
+              <input id="wordFilter" type="search" class="entries-search-input" placeholder="Filter words…" autocomplete="off">
+            </div>
+            <button type="button" class="btn btn-secondary-accent btn-icon" id="exportCsvBtn" aria-label="Export lexical dispersion table as CSV">
+              <svg class="icon-red" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+            </button>
+          </div>
+        </div>
+
+        <div id="sortStatus" role="status" class="visually-hidden"></div>
+
+        <div tabindex="0" role="region" aria-labelledby="dispersionTableCaption" class="table-wrapper">
+          <table id="dispersionTable" class="dispersion-table">
+            <caption id="dispersionTableCaption" class="visually-hidden">
+              Per-word lexical dispersion and burstiness indices across corpus segments
+            </caption>
+            <thead>
+              <tr>
+                <th scope="col" data-type="text">
+                  <button type="button" commandfor="dispersionTable" command="--sort">
+                    <span>Word</span><span class="sort-icon" aria-hidden="true"></span>
+                  </button>
+                </th>
+                <th scope="col" data-type="number" aria-sort="descending">
+                  <button type="button" commandfor="dispersionTable" command="--sort">
+                    <span>Freq</span><span class="sort-icon" aria-hidden="true"></span>
+                  </button>
+                </th>
+                <th scope="col" data-type="number">
+                  <button type="button" commandfor="dispersionTable" command="--sort">
+                    <span>Range</span><span class="sort-icon" aria-hidden="true"></span>
+                  </button>
+                </th>
+                <th scope="col" data-type="number">
+                  <button type="button" commandfor="dispersionTable" command="--sort">
+                    <span>Gries DP</span><span class="sort-icon" aria-hidden="true"></span>
+                  </button>
+                </th>
+                <th scope="col" data-type="number">
+                  <button type="button" commandfor="dispersionTable" command="--sort">
+                    <span>DP<sub>norm</sub></span><span class="sort-icon" aria-hidden="true"></span>
+                  </button>
+                </th>
+                <th scope="col" data-type="number">
+                  <button type="button" commandfor="dispersionTable" command="--sort">
+                    <span>Juilland D</span><span class="sort-icon" aria-hidden="true"></span>
+                  </button>
+                </th>
+                <th scope="col" data-type="number">
+                  <button type="button" commandfor="dispersionTable" command="--sort">
+                    <span>Carroll D<sub>2</sub></span><span class="sort-icon" aria-hidden="true"></span>
+                  </button>
+                </th>
+                <th scope="col" data-type="number">
+                  <button type="button" commandfor="dispersionTable" command="--sort">
+                    <span>Rosengren S</span><span class="sort-icon" aria-hidden="true"></span>
+                  </button>
+                </th>
+                <th scope="col" data-type="number">
+                  <button type="button" commandfor="dispersionTable" command="--sort">
+                    <span>Burstiness B</span><span class="sort-icon" aria-hidden="true"></span>
+                  </button>
+                </th>
+                <th scope="col">Segment Profile</th>
+              </tr>
+            </thead>
+            <tbody id="dispersionTbody"></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+
+    <!-- footer matching nlp4ed structure + refs -->
+    <footer class="app-footer">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <div class="footer-heading">
+            <svg class="icon-red" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+            About Leximetrica
+          </div>
+          <p class="footer-desc">
+            <strong>Leximetrica</strong> is an open-access quantitative linguistics and lexical dispersion workbench designed to measure dispersion indices, burstiness, and corpus-level statistical laws directly in the browser.
+          </p>
+          <div class="footer-meta">
+            <div><strong>License:</strong> <a href="LICENSE.txt" target="_blank" rel="noopener noreferrer">MIT License</a></div>
+          </div>
+        </div>
+
+        <div class="attribution-box">
+          <div class="attribution-box-header">
+            <div class="attribution-box-title">
+              <svg class="icon-red" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
+              Attribution
+            </div>
+          </div>
+
+          <div class="attribution-columns">
+            <div>
+              <div class="attribution-subheading">
+                <svg class="icon-red" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 7V4H6l6 8-6 8h12v-3"></path></svg>
+                Metrics &amp; Formulas
+              </div>
+              <ul class="footer-links">
+                <li>
+                  <strong>Gries's DP &amp; DP<sub>norm</sub></strong>
+                  <span>- Deviation of Proportions (0 = uniform, 1 = clumped)</span>
+                </li>
+                <li>
+                  <strong>Juilland's D &amp; Carroll's D<sub>2</sub></strong>
+                  <span>- Classic &amp; entropy dispersion (1 = uniform, 0 = clumped)</span>
+                </li>
+                <li>
+                  <strong>Rosengren's S</strong>
+                  <span>- Frequency-weighted proportional dispersion index</span>
+                </li>
+                <li>
+                  <strong>Burstiness (B)</strong>
+                  <span>- Inter-occurrence gap index (-1 periodic, 0 Poisson, +1 bursty)</span>
+                </li>
+                <li>
+                  <strong>Zipf &amp; Heaps Laws</strong>
+                  <span>- Power-law rank decay &amp; vocabulary growth regressions</span>
+                </li>
+                <li>
+                  <strong>Shannon Entropy &amp; Menzerath-Altmann</strong>
+                  <span>- Lexical information bits, evenness J, and sentence-word trend</span>
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <div class="attribution-subheading">
+                <svg class="icon-red" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                Papers
+              </div>
+              <ul class="footer-links">
+                <li>
+                  <a href="https://doi.org/10.1075/ijcl.13.4.02gri" target="_blank" rel="noopener noreferrer">Gries (2008)</a>
+                  <span>- Dispersions and adjusted frequencies in corpora (IJCL, 13(4))</span>
+                </li>
+                <li>
+                  <a href="https://doi.org/10.1075/ijcl.17.1.08lij" target="_blank" rel="noopener noreferrer">Lijffijt &amp; Gries (2012)</a>
+                  <span>- Correction to Gries (2008) on DP<sub>norm</sub> (IJCL, 17(1))</span>
+                </li>
+                <li>
+                  <a href="https://doi.org/10.1209/0295-5075/81/48002" target="_blank" rel="noopener noreferrer">Goh &amp; Barabási (2008)</a>
+                  <span>- Burstiness and memory in complex systems (EPL, 81(4))</span>
+                </li>
+                <li>
+                  <a href="https://doi.org/10.1515/9783112415467" target="_blank" rel="noopener noreferrer">Juilland &amp; Chang-Rodriguez (1964)</a>
+                  <span>- Frequency Dictionary of Spanish Words (Mouton)</span>
+                </li>
+                <li>
+                  <a href="https://doi.org/10.1002/j.2333-8504.1970.tb00778.x" target="_blank" rel="noopener noreferrer">Carroll (1970)</a>
+                  <span>- An alternative to Juilland's usage coefficient (ETS Research Bulletin)</span>
+                </li>
+                <li>
+                  <a href="https://doi.org/10.1002/j.1538-7305.1948.tb01338.x" target="_blank" rel="noopener noreferrer">Shannon (1948)</a>
+                  <span>- A mathematical theory of communication (Bell Syst. Tech. J.)</span>
+                </li>
+                <li>
+                  <strong>Rosengren (1971)</strong>
+                  <span>- Quantitative concept of language (Études de linguistique appliquée, 1)</span>
+                </li>
+                <li>
+                  <strong>Zipf (1949); Heaps (1978); Altmann (1980)</strong>
+                  <span>- Least Effort (Addison-Wesley); Info. Retrieval (Academic Press); Glottometrika 2</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <span>&copy; 2026 <a href="https://www.linkedin.com/in/yassine-lchgary/" target="_blank" rel="noopener noreferrer"><strong>Yassine Lchgary</strong></a> &bull; Leximetrica: Quantitative Linguistics &amp; Dispersion Analyzer</span>
+      </div>
+    </footer>
+  </div>
+
+  <!-- defer scripts for pages + local file:// fallback -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js" defer></script>
+  <script src="py_bundle.js" defer></script>
+  <script src="samples.js" defer></script>
+  <script src="app.js" defer></script>
+</body>
+</html>

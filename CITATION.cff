@@ -1,0 +1,21 @@
+cff-version: 1.2.0
+title: "Leximetrica: Quantitative Linguistics & Lexical Dispersion Analyzer"
+message: "If you use Leximetrica in your research or pedagogical projects, please cite it using the metadata below."
+type: software
+version: "1.3.0"
+date-released: "2026-11-22"
+license: MIT
+url: "https://nlp4ed.com/Leximetrica/"
+repository-code: "https://github.com/NLP4Ed/Leximetrica"
+authors:
+  - family-names: "Lchgary"
+    given-names: "Yassine"
+keywords:
+  - corpus-linguistics
+  - quantitative-linguistics
+  - lexical-dispersion
+  - burstiness
+  - zipf-law
+  - heaps-law
+  - menzerath-altmann
+  - gries-dp
