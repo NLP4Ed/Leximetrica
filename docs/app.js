@@ -14,6 +14,7 @@
   const numSegmentsInput = document.getElementById("numSegments");
   const minFreqInput = document.getElementById("minFreq");
   const lowercaseCheckbox = document.getElementById("optLowercase");
+  const clearBtn = document.getElementById("clearBtn");
   const fileUploadInput = document.getElementById("fileUpload");
   const analyzeBtn = document.getElementById("analyzeBtn");
   const analyzeBtnSpinner = document.getElementById("analyzeBtnSpinner");
@@ -750,7 +751,7 @@ def _run_analysis(text, num_segments, min_freq, lowercase):
     const numSegs = dispersion.segment_sizes ? dispersion.segment_sizes.length : 0;
 
     dispersionSummaryLine.textContent = words.length
-      ? `Showing ${words.length} word types (freq ≥ ${lastResult.meta.min_freq}) across ${numSegs} corpus segments. Click any header to sort.`
+      ? `Showing ${words.length} word types (freq ≥ ${lastResult.meta.min_freq}) across ${numSegs} corpus segments.`
       : "No words met the minimum frequency threshold. Try lowering Min. freq.";
 
     const fragment = document.createDocumentFragment();
@@ -1034,6 +1035,13 @@ def _run_analysis(text, num_segments, min_freq, lowercase):
       inputText.replaceChildren();
     }
     updateInputCounter();
+  });
+
+  clearBtn.addEventListener("click", () => {
+    inputText.replaceChildren();
+    updateInputCounter();
+    hideError();
+    inputText.focus();
   });
 
   analyzeBtn.addEventListener("click", triggerAnalysis);
