@@ -3,6 +3,7 @@ title: "Leximetrica: Quantitative Linguistics & Lexical Dispersion Analyzer"
 message: "If you use Leximetrica in your research or pedagogical projects, please cite it using the metadata below."
 type: software
 version: "1.3.0"
+doi: "10.5281/zenodo.24459810"
 date-released: "2026-11-22"
 license: MIT
 url: "https://nlp4ed.com/Leximetrica/"

@@ -10,6 +10,7 @@
 
 <p align="center">
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"></a>
+  <a href="https://doi.org/10.5281/zenodo.24459810"><img src="https://img.shields.io/badge/DOI-10.5281%2Fzenodo.24459810-purple.svg" alt="DOI: 10.5281/zenodo.24459810"></a>
   <a href="https://github.com/NLP4Ed/Leximetrica"><img src="https://img.shields.io/badge/Release-v1.3-blue.svg" alt="Version"></a>
   <a href="https://nlp4ed.com/Leximetrica/"><img src="https://img.shields.io/badge/Live%20App-Leximetrica%201.3-emerald.svg" alt="Live App Leximetrica 1.3"></a>
   <a href="docs/index.html"><img src="https://img.shields.io/badge/Execution-100%25%20Client--Side-teal.svg" alt="Client-Side"></a>
